@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Мини-игры — K-STREET</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg:           #0a0c18;
+  --bg-2:         #12152a;
+  --bg-3:         #1a1e38;
+  --neon-pink:    #ff2ea6;
+  --neon-violet:  #9b4dff;
+  --neon-blue:    #3ecbff;
+  --yellow:       #ffd400;
+  --text:         #ffffff;
+  --text-muted:   #9a9db5;
+  --border:       rgba(255, 46, 166, 0.18);
+  --radius:       18px;
+  --shadow-pink:  0 0 24px rgba(255, 46, 166, 0.45);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(155, 77, 255, 0.18), transparent 45%),
+    radial-gradient(circle at 85% 70%, rgba(255, 46, 166, 0.15), transparent 45%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+.container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Шапка */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 12, 24, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-img {
+  height: 64px;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 212, 0, 0.3));
+}
+
+.logo-text {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  color: var(--yellow);
+  text-shadow: 0 0 16px rgba(255, 212, 0, 0.45);
+}
+
+.back-link {
+  font-size: 14px;
+  color: var(--text-muted);
+  transition: 0.2s;
+}
+.back-link:hover { color: var(--neon-pink); }
+
+/* Заголовок */
+.page-hero {
+  padding: 50px 0 30px;
+  text-align: center;
+}
+
+.page-hero-kr {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: clamp(20px, 2.8vw, 30px);
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 20px rgba(255, 46, 166, 0.7),
+    0 0 40px rgba(255, 46, 166, 0.4);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.page-hero-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: clamp(28px, 4vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(100deg, var(--neon-pink) 0%, var(--neon-violet) 55%, var(--neon-blue) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 24px rgba(255, 46, 166, 0.4));
+  margin-bottom: 12px;
+}
+
+.page-hero-text {
+  color: var(--text-muted);
+  font-size: 16px;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+.page-hero-text strong {
+  color: var(--yellow);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+}
+
+/* Экраны */
+.screen {
+  display: none;
+  padding: 30px 0 60px;
+}
+.screen.active { display: block; }
+
+/* Экран выбора игры */
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.game-choice {
+  background: var(--bg-2);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 22px 20px;
+  transition: 0.35s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+  color: var(--text);
+}
+
+.game-choice::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-blue));
+  opacity: 0.9;
+}
+
+.game-choice:hover {
+  border-color: var(--neon-pink);
+  box-shadow:
+    0 0 40px rgba(255, 46, 166, 0.4),
+    0 20px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(-6px);
+}
+
+.choice-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 46, 166, 0.15), rgba(155, 77, 255, 0.15));
+  border: 1.5px solid rgba(255, 46, 166, 0.4);
+  box-shadow:
+    0 0 20px rgba(255, 46, 166, 0.3),
+    inset 0 0 20px rgba(255, 46, 166, 0.1);
+}
+
+.choice-icon svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--neon-pink);
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  filter: drop-shadow(0 0 8px rgba(255, 46, 166, 0.8));
+}
+
+.choice-kr {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: 14px;
+  color: var(--neon-pink);
+  text-shadow: 0 0 12px rgba(255, 46, 166, 0.6);
+  margin-bottom: 6px;
+  line-height: 1;
+  letter-spacing: 0.05em;
+}
+
+.choice-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+  line-height: 1.2;
+  color: #ffffff !important;
+}
+
+.choice-text {
+  color: var(--text-muted);
+  font-size: 13px;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+.choice-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  justify-content: center;
+}
+
+.choice-tag {
+  padding: 5px 12px;
+  border-radius: 50px;
+  background: var(--bg-3);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.game-choice .btn {
+  padding: 11px 22px;
+  font-size: 11px;
+}
+
+/* Кнопки */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 28px;
+  border-radius: 50px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: 0.25s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: 0 0 22px rgba(255, 46, 166, 0.5);
+}
+.btn-primary:hover {
+  background: #ff54b8;
+  box-shadow: 0 0 34px rgba(255, 46, 166, 0.85);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: var(--shadow-pink);
+}
+
+.btn-block { width: 100%; }
+
+/* Игровой экран */
+.game-wrap {
+  padding: 20px 0 60px;
+}
+
+.game-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(255, 46, 166, 0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-blue));
+  box-shadow: 0 0 20px rgba(255, 46, 166, 0.6);
+}
+
+.game-hud {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-label {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px rgba(255, 46, 166, 0.5);
+}
+
+.hud-value {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--yellow);
+  text-shadow: 0 0 12px rgba(255, 212, 0, 0.5);
+  line-height: 1;
+}
+
+.hud-lives {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.hud-life {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--neon-pink);
+  box-shadow: 0 0 10px var(--neon-pink);
+  transition: 0.3s;
+}
+
+.hud-life.lost {
+  background: var(--bg-3);
+  box-shadow: none;
+  opacity: 0.3;
+}
+
+.back-to-games {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+  transition: 0.2s;
+  cursor: pointer;
+}
+.back-to-games:hover { color: var(--neon-pink); }
+
+/* Игровое поле */
+.game-field {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: #05060e;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 46, 166, 0.15);
+  cursor: none;
+}
+
+.game-field canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Поле мемори */
+.memory-wrap {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.memory-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  padding: 20px;
+  background: #05060e;
+  border: 1px solid rgba(255, 46, 166, 0.15);
+  min-height: 380px;
+}
+
+.memory-card {
+  aspect-ratio: 1 / 1;
+  perspective: 1000px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.memory-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  display: block;
+}
+
+.memory-card.flipped .memory-card-inner,
+.memory-card.matched .memory-card-inner {
+  transform: rotateY(180deg);
+}
+
+.memory-card-front,
+.memory-card-back {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+}
+
+.memory-card-front {
+  background: linear-gradient(135deg, var(--bg-3), #0a0c18);
+  border: 1px solid rgba(255, 46, 166, 0.25);
+  color: var(--neon-pink);
+  font-size: 32px;
+  text-shadow: 0 0 12px rgba(255, 46, 166, 0.5);
+  font-family: 'Unbounded', sans-serif;
+}
+
+.memory-card-front::after {
+  content: '';
+  position: absolute;
+  inset: 8px;
+  border-radius: 8px;
+  border: 1px dashed rgba(255, 46, 166, 0.2);
+  pointer-events: none;
+}
+
+.memory-card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, var(--neon-pink), var(--neon-violet));
+  color: #fff;
+  font-size: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 0 20px rgba(255, 46, 166, 0.5),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.6);
+}
+
+.memory-card.matched .memory-card-back {
+  background: linear-gradient(135deg, var(--yellow), #ff9500);
+  color: #1a1a1a;
+  box-shadow:
+    0 0 30px rgba(255, 212, 0, 0.8),
+    inset 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Оверлеи */
+.game-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 24px;
+  text-align: center;
+  background: rgba(5, 6, 14, 0.92);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 5;
+  transition: 0.3s ease;
+  border-radius: 12px;
+}
+
+.game-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.overlay-kr {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: 24px;
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 20px rgba(255, 46, 166, 0.7),
+    0 0 40px rgba(255, 46, 166, 0.4);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.overlay-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: clamp(20px, 2.6vw, 28px);
+  letter-spacing: -0.01em;
+  margin-bottom: 12px;
+  color: #fff;
+}
+
+.overlay-text {
+  color: var(--text-muted);
+  font-size: 14.5px;
+  max-width: 400px;
+  margin-bottom: 22px;
+  line-height: 1.6;
+}
+
+.overlay-text strong {
+  color: var(--yellow);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+}
+
+.promo-box {
+  background: linear-gradient(135deg, rgba(255, 46, 166, 0.15), rgba(155, 77, 255, 0.15));
+  border: 2px dashed var(--neon-pink);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  box-shadow:
+    0 0 30px rgba(255, 46, 166, 0.3),
+    inset 0 0 30px rgba(255, 46, 166, 0.05);
+}
+
+.promo-label {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.promo-code {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: clamp(20px, 2.6vw, 28px);
+  letter-spacing: 0.1em;
+  color: var(--yellow);
+  text-shadow: 0 0 24px rgba(255, 212, 0, 0.7);
+  user-select: all;
+}
+
+.promo-hint {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 8px;
+}
+
+.overlay-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.game-hint {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  margin-top: 16px;
+}
+
+.game-hint strong { color: var(--text); }
+
+/* Подвал */
+.footer {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  padding: 30px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+}
+
+@media (max-width: 720px) {
+  .header-inner { height: 72px; gap: 10px; }
+  .logo-img { height: 52px; }
+  .logo-text { font-size: 17px; }
+
+  .page-hero { padding: 30px 0 20px; }
+
+  .games-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    max-width: 100%;
+  }
+  .game-choice { padding: 20px 18px; }
+  .choice-icon { width: 54px; height: 54px; }
+  .choice-icon svg { width: 26px; height: 26px; }
+  .choice-title { font-size: 16px; }
+
+  .game-card { padding: 16px; }
+  .hud-value { font-size: 17px; }
+
+  .game-field { aspect-ratio: 4 / 5; }
+
+  .memory-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    padding: 12px;
+    min-height: 320px;
+  }
+  .memory-card-front { font-size: 22px; }
+  .memory-card-back { font-size: 26px; }
+
+  .overlay-buttons .btn { width: 100%; }
+}
+
+@media (max-width: 400px) {
+  .logo-text { display: none; }
+  .memory-card-front { font-size: 18px; }
+  .memory-card-back { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ШАПКА -->
+<header class="header">
+  <div class="container header-inner">
+    <a href="index.html" class="logo">
+      <img src="img/logo.png" alt="K-STREET" class="logo-img">
+      <span class="logo-text">K-STREET</span>
+    </a>
+    <a href="index.html" class="back-link">&#8592; На главную</a>
+  </div>
+</header>
+
+<!-- ЗАГОЛОВОК -->
+<section class="page-hero">
+  <div class="container">
+    <p class="page-hero-kr">미니 게임</p>
+    <h1 class="page-hero-title">Мини-игры</h1>
+    <p class="page-hero-text">
+      Пока ждёшь заказ — сыграй и получи <strong>промокод на скидку 10%</strong>.
+      Выбирай игру по вкусу.
+    </p>
+  </div>
+</section>
+
+<!-- ЭКРАН 1: ВЫБОР ИГРЫ -->
+<section class="screen active" id="screenChoice">
+  <div class="container">
+    <div class="games-grid">
+
+      <button class="game-choice" data-game="catch">
+        <div class="choice-icon">
+          <svg viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9"></circle>
+            <circle cx="12" cy="12" r="5"></circle>
+            <path d="M12 3v4M12 17v4"></path>
+          </svg>
+        </div>
+        <p class="choice-kr">김치 잡기</p>
+        <h2 class="choice-title">Поймай кимчи</h2>
+        <p class="choice-text">Двигай корзинку и лови еду, избегай бомб.</p>
+        <div class="choice-tags">
+          <span class="choice-tag">30 сек</span>
+          <span class="choice-tag">10 очков</span>
+        </div>
+        <span class="btn btn-primary btn-block">Играть</span>
+      </button>
+
+      <button class="game-choice" data-game="memory">
+        <div class="choice-icon">
+          <svg viewBox="0 0 24 24">
+            <rect x="3" y="5" width="10" height="14" rx="2"></rect>
+            <rect x="11" y="5" width="10" height="14" rx="2"></rect>
+            <path d="M8 12l1.5 1.5L12 10"></path>
+          </svg>
+        </div>
+        <p class="choice-kr">카드 맞추기</p>
+        <h2 class="choice-title">Мемори</h2>
+        <p class="choice-text">Найди пары корейских иероглифов.</p>
+        <div class="choice-tags">
+          <span class="choice-tag">60 сек</span>
+          <span class="choice-tag">8 пар</span>
+        </div>
+        <span class="btn btn-primary btn-block">Играть</span>
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<!-- ЭКРАН 2: ПОЙМАЙ КИМЧИ -->
+<section class="screen" id="screenCatch">
+  <div class="container game-wrap">
+
+    <a class="back-to-games" id="backFromCatch">&#8592; Выбрать другую игру</a>
+
+    <div class="game-card">
+
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="hud-label">Очки</span>
+          <span class="hud-value" id="catchScore">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Время</span>
+          <span class="hud-value" id="catchTime">30</span>
+        </div>
+        <div class="hud-item" style="flex: 1; min-width: 100px;">
+          <span class="hud-label">Жизни</span>
+          <div class="hud-lives" id="catchLives">
+            <span class="hud-life"></span>
+            <span class="hud-life"></span>
+            <span class="hud-life"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="game-field" id="catchField">
+        <canvas id="catchCanvas"></canvas>
+
+        <div class="game-overlay" id="catchOverlayStart">
+          <p class="overlay-kr">준비됐어요?</p>
+          <h2 class="overlay-title">Готов ловить?</h2>
+          <p class="overlay-text">
+            Лови <strong>еду</strong> и избегай <strong>бомб</strong>.<br>
+            Набери 10 очков за 30 секунд.
+          </p>
+          <div class="overlay-buttons">
+            <button class="btn btn-primary" id="catchStartBtn">Начать игру</button>
+          </div>
+        </div>
+
+        <div class="game-overlay hidden" id="catchOverlayWin">
+          <p class="overlay-kr">축하해요!</p>
+          <h2 class="overlay-title">Победа!</h2>
+          <p class="overlay-text">
+            Ты набрал <strong><span id="catchWinScore">0</span> очков</strong>.
+            Держи промокод на скидку 10%:
+          </p>
+          <div class="promo-box">
+            <p class="promo-label">Промокод</p>
+            <p class="promo-code">KSTREET10</p>
+            <p class="promo-hint">Скажи его официанту или введи при оформлении заказа</p>
+          </div>
+          <div class="overlay-buttons">
+            <button class="btn btn-primary" id="catchPlayAgainWin">Сыграть ещё</button>
+            <a href="menu.html" class="btn btn-outline">В меню</a>
+          </div>
+        </div>
+
+        <div class="game-overlay hidden" id="catchOverlayLose">
+          <p class="overlay-kr">아쉽네요</p>
+          <h2 class="overlay-title">Не в этот раз</h2>
+          <p class="overlay-text">
+            Ты набрал <strong><span id="catchLoseScore">0</span> очков</strong>.<br>
+            Нужно было набрать минимум 10.
+          </p>
+          <div class="overlay-buttons">
+            <button class="btn btn-primary" id="catchPlayAgainLose">Сыграть ещё</button>
+            <a href="menu.html" class="btn btn-outline">В меню</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="game-hint">
+        <strong>Управление:</strong> двигай мышью или пальцем &nbsp;·&nbsp;
+        <strong>Цель:</strong> 10 очков за 30 секунд
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<!-- ЭКРАН 3: МЕМОРИ -->
+<section class="screen" id="screenMemory">
+  <div class="container game-wrap">
+
+    <a class="back-to-games" id="backFromMemory">&#8592; Выбрать другую игру</a>
+
+    <div class="game-card">
+
+      <div class="game-hud">
+        <div class="hud-item">
+          <span class="hud-label">Ходы</span>
+          <span class="hud-value" id="memoryMoves">0</span>
+        </div>
+        <div class="hud-item">
+          <span class="hud-label">Пары</span>
+          <span class="hud-value" id="memoryPairs">0 / 8</span>
+        </div>
+        <div class="hud-item" style="flex: 1; min-width: 100px;">
+          <span class="hud-label">Время</span>
+          <span class="hud-value" id="memoryTime">60</span>
+        </div>
+      </div>
+
+      <div class="memory-wrap">
+        <div class="memory-grid" id="memoryGrid"></div>
+
+        <div class="game-overlay" id="memoryOverlayStart">
+          <p class="overlay-kr">카드 뒤집기</p>
+          <h2 class="overlay-title">Мемори</h2>
+          <p class="overlay-text">
+            Открывай по две карточки и находи пары корейских иероглифов.<br>
+            Успей за 60 секунд — получишь промокод на скидку.
+          </p>
+          <div class="overlay-buttons">
+            <button class="btn btn-primary" id="memoryStartBtn">Начать игру</button>
+          </div>
+        </div>
+
+        <div class="game-overlay hidden" id="memoryOverlayWin">
+          <p class="overlay-kr">축하해요!</p>
+          <h2 class="overlay-title">Победа!</h2>
+          <p class="overlay-text">
+            Все пары найдены за <strong><span id="memoryWinMoves">0</span> ходов</strong>
+            и <strong><span id="memoryWinTime">0</span></strong>.
+            Держи промокод на скидку 10%:
+          </p>
+          <div class="promo-box">
+            <p class="promo-label">Промокод</p>
+            <p class="promo-code">KSTREET10</p>
+            <p class="promo-hint">Скажи его официанту или введи при оформлении заказа</p>
+          </div>
+          <div class="overlay-buttons">
+            <button class="btn btn-primary" id="memoryPlayAgainWin">Сыграть ещё</button>
+            <a href="menu.html" class="btn btn-outline">В меню</a>
+          </div>
+        </div>
+
+        <div class="game-overlay hidden" id="memoryOverlayLose">
+          <p class="overlay-kr">아쉽네요</p>
+          <h2 class="overlay-title">Время вышло</h2>
+          <p class="overlay-text">
+            Ты нашёл не все пары за отведённое время.<br>
+            Ходов сделано: <strong><span id="memoryLoseMoves">0</span></strong>.
+          </p>
+          <div class="overlay-buttons">
+            <button class="btn btn-primary" id="memoryPlayAgainLose">Сыграть ещё</button>
+            <a href="menu.html" class="btn btn-outline">В меню</a>
+          </div>
+        </div>
+      </div>
+
+      <p class="game-hint">
+        <strong>Цель:</strong> найти 8 пар иероглифов за 60 секунд
+      </p>
+
+    </div>
+  </div>
+</section>
+
+<!-- ПОДВАЛ -->
+<footer class="footer">
+  <div class="container">© 2025 K-STREET. Игры созданы для развлечения гостей.</div>
+</footer>
+
+<!-- ИГРЫ -->
+<script src="js/catch-game.js"></script>
+<script src="js/memory-game.js"></script>
+
+<script>
+/* ============================================
+   ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ
+   ============================================ */
+const screens = {
+  choice: document.getElementById('screenChoice'),
+  catch:  document.getElementById('screenCatch'),
+  memory: document.getElementById('screenMemory')
+};
+
+function showScreen(name) {
+  Object.values(screens).forEach(function (s) { s.classList.remove('active'); });
+  screens[name].classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.querySelectorAll('.game-choice').forEach(function (card) {
+  card.addEventListener('click', function () {
+    const game = card.getAttribute('data-game');
+    if (game === 'catch') {
+      showScreen('catch');
+      initCatchIfNeeded();
+    } else if (game === 'memory') {
+      showScreen('memory');
+      initMemoryIfNeeded();
+    }
+  });
+});
+
+document.getElementById('backFromCatch').addEventListener('click', function (e) {
+  e.preventDefault();
+  showScreen('choice');
+});
+document.getElementById('backFromMemory').addEventListener('click', function (e) {
+  e.preventDefault();
+  showScreen('choice');
+});
+
+/* ============================================
+   ЛЕНИВАЯ ИНИЦИАЛИЗАЦИЯ ИГР
+   ============================================ */
+let catchInited = false;
+let memoryInited = false;
+
+function initCatchIfNeeded() {
+  if (catchInited) return;
+  catchInited = true;
+  initCatchGame({
+    canvasId: 'catchCanvas',
+    fieldId: 'catchField',
+    scoreId: 'catchScore',
+    timeId: 'catchTime',
+    livesId: 'catchLives',
+    overlayStart: 'catchOverlayStart',
+    overlayWin: 'catchOverlayWin',
+    overlayLose: 'catchOverlayLose',
+    winScoreId: 'catchWinScore',
+    loseScoreId: 'catchLoseScore',
+    startBtnId: 'catchStartBtn',
+    playAgainWinId: 'catchPlayAgainWin',
+    playAgainLoseId: 'catchPlayAgainLose',
+    targetScore: 10,
+    duration: 30
+  });
+}
+
+function initMemoryIfNeeded() {
+  if (memoryInited) return;
+  memoryInited = true;
+  initMemoryGame({
+    gridId: 'memoryGrid',
+    movesId: 'memoryMoves',
+    pairsId: 'memoryPairs',
+    timeId: 'memoryTime',
+    overlayStart: 'memoryOverlayStart',
+    overlayWin: 'memoryOverlayWin',
+    overlayLose: 'memoryOverlayLose',
+    winMovesId: 'memoryWinMoves',
+    winTimeId: 'memoryWinTime',
+    loseMovesId: 'memoryLoseMoves',
+    startBtnId: 'memoryStartBtn',
+    playAgainWinId: 'memoryPlayAgainWin',
+    playAgainLoseId: 'memoryPlayAgainLose',
+    duration: 60
+  });
+}
+</script>
+
+</body>
+</html>

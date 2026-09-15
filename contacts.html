@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Контакты — K-STREET</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;900&family=Inter:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================
+   ПЕРЕМЕННЫЕ
+   ============================================ */
+:root {
+  --bg:           #0a0c18;
+  --bg-2:         #12152a;
+  --bg-3:         #1a1e38;
+  --neon-pink:    #ff2ea6;
+  --neon-violet:  #9b4dff;
+  --neon-blue:    #3ecbff;
+  --yellow:       #ffd400;
+  --text:         #ffffff;
+  --text-muted:   #9a9db5;
+  --border:       rgba(255, 46, 166, 0.18);
+  --radius:       18px;
+  --radius-sm:    12px;
+  --shadow-pink:  0 0 24px rgba(255, 46, 166, 0.45);
+}
+
+/* ============================================
+   СБРОС
+   ============================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ============================================
+   КНОПКИ
+   ============================================ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 30px;
+  border-radius: 50px;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  transition: 0.25s ease;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: 0 0 22px rgba(255, 46, 166, 0.5);
+}
+.btn-primary:hover {
+  background: #ff54b8;
+  box-shadow: 0 0 34px rgba(255, 46, 166, 0.85);
+  transform: translateY(-2px);
+}
+
+.btn-outline {
+  border: 2px solid var(--neon-pink);
+  color: var(--neon-pink);
+  background: transparent;
+}
+.btn-outline:hover {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: var(--shadow-pink);
+}
+
+/* ============================================
+   ШАПКА
+   ============================================ */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(10, 12, 24, 0.85);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 84px;
+  gap: 24px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.logo-img {
+  height: 64px;
+  width: auto;
+  filter: drop-shadow(0 0 10px rgba(255, 212, 0, 0.3));
+}
+
+.logo-text {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: 0.02em;
+  color: var(--yellow);
+  text-shadow: 0 0 16px rgba(255, 212, 0, 0.45);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.nav-link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  position: relative;
+  transition: 0.2s;
+  padding: 6px 0;
+}
+.nav-link:hover { color: var(--text); }
+
+.nav-link.active {
+  color: var(--text);
+  font-weight: 600;
+}
+.nav-link.active::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -2px;
+  height: 2px;
+  background: var(--neon-pink);
+  border-radius: 2px;
+  box-shadow: 0 0 10px var(--neon-pink);
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.user-name {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--yellow);
+  text-shadow: 0 0 10px rgba(255, 212, 0, 0.4);
+  white-space: nowrap;
+}
+
+.user-logout {
+  padding: 8px 16px;
+  border-radius: 50px;
+  border: 1.5px solid var(--neon-pink);
+  color: var(--neon-pink);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: 0.2s;
+}
+.user-logout:hover {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: var(--shadow-pink);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-btn {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--neon-pink);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--neon-pink);
+  transition: 0.25s;
+  flex-shrink: 0;
+}
+.cart-btn:hover {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: var(--shadow-pink);
+}
+.cart-btn svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+
+.cart-count {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 11px;
+  background: var(--yellow);
+  color: #1a1a1a;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  box-shadow: 0 0 12px rgba(255, 212, 0, 0.6);
+  transform: scale(0);
+  transition: transform 0.25s ease;
+}
+.cart-count.visible { transform: scale(1); }
+
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+}
+.burger span {
+  display: block;
+  width: 26px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  transition: 0.3s;
+  margin: 0 auto;
+}
+.burger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.burger.active span:nth-child(2) { opacity: 0; }
+.burger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ============================================
+   ЗАГОЛОВОК СТРАНИЦЫ
+   ============================================ */
+.page-hero {
+  padding: 60px 0 40px;
+  text-align: center;
+  position: relative;
+}
+
+.page-hero-kr {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 900;
+  font-size: clamp(20px, 2.8vw, 30px);
+  color: var(--neon-pink);
+  text-shadow:
+    0 0 20px rgba(255, 46, 166, 0.7),
+    0 0 40px rgba(255, 46, 166, 0.4);
+  margin-bottom: 8px;
+  line-height: 1;
+}
+
+.page-hero-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: clamp(30px, 4.5vw, 54px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  background: linear-gradient(100deg, var(--neon-pink) 0%, var(--neon-violet) 55%, var(--neon-blue) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 24px rgba(255, 46, 166, 0.4));
+}
+
+/* ============================================
+   КАРТА + КАРТОЧКА КОНТАКТОВ
+   ============================================ */
+.map-section {
+  position: relative;
+  padding: 0 0 80px;
+}
+
+.map-wrap {
+  position: relative;
+  width: 100%;
+  height: 620px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: hidden;
+  background: var(--bg-3);
+}
+
+.map-wrap iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  filter: saturate(0.85) brightness(0.9);
+  transition: filter 0.3s ease;
+}
+
+.map-wrap:hover iframe {
+  filter: saturate(1) brightness(0.95);
+}
+
+.map-wrap::before,
+.map-wrap::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0;
+  height: 80px;
+  pointer-events: none;
+  z-index: 2;
+}
+.map-wrap::before {
+  top: 0;
+  background: linear-gradient(180deg, rgba(10, 12, 24, 0.85), transparent);
+}
+.map-wrap::after {
+  bottom: 0;
+  background: linear-gradient(0deg, rgba(10, 12, 24, 0.85), transparent);
+}
+
+.contact-card {
+  position: relative;
+  margin: -160px auto 0;
+  max-width: 520px;
+  padding: 40px 36px;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow:
+    0 30px 60px rgba(0, 0, 0, 0.6),
+    0 0 40px rgba(255, 46, 166, 0.2);
+  z-index: 5;
+  text-align: center;
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--neon-pink), var(--neon-violet), var(--neon-blue));
+  box-shadow: 0 0 20px rgba(255, 46, 166, 0.6);
+  border-radius: var(--radius) var(--radius) 0 0;
+}
+
+.contact-card-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 20px;
+  margin-bottom: 26px;
+  letter-spacing: -0.01em;
+}
+
+.contact-list {
+  list-style: none;
+  margin-bottom: 28px;
+}
+
+.contact-list li {
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contact-list li:last-child {
+  border-bottom: none;
+}
+
+.contact-label {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px rgba(255, 46, 166, 0.5);
+}
+
+.contact-value {
+  font-size: 16px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.contact-value a {
+  color: var(--text);
+  transition: 0.2s;
+}
+.contact-value a:hover {
+  color: var(--neon-pink);
+  text-shadow: 0 0 10px rgba(255, 46, 166, 0.6);
+}
+
+.contact-vk {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
+  border-radius: 50px;
+  border: 1.5px solid var(--neon-pink);
+  color: var(--neon-pink);
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: 0.25s;
+  margin-top: 6px;
+}
+.contact-vk:hover {
+  background: var(--neon-pink);
+  color: #fff;
+  box-shadow: var(--shadow-pink);
+}
+.contact-vk svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* ============================================
+   БЛОК РЕКВИЗИТОВ
+   ============================================ */
+.legal {
+  padding: 50px 0 30px;
+  text-align: center;
+}
+
+.legal-block {
+  margin-bottom: 26px;
+}
+
+.legal-block:last-child {
+  margin-bottom: 0;
+}
+
+.legal-title {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--neon-pink);
+  margin-bottom: 10px;
+}
+
+.legal-text {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.legal-links {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.legal-links a {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: rgba(255, 46, 166, 0.3);
+  transition: 0.2s;
+}
+.legal-links a:hover {
+  color: var(--neon-pink);
+  text-decoration-color: var(--neon-pink);
+}
+
+/* ============================================
+   ПОДВАЛ
+   ============================================ */
+.footer {
+  background: var(--bg-2);
+  border-top: 1px solid var(--border);
+  padding: 52px 0 0;
+  margin-top: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.footer-inner {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+}
+
+.footer-col .logo-text {
+  font-size: 20px;
+  display: inline-block;
+  margin-bottom: 12px;
+}
+.footer-col p {
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-col h4 {
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.footer-col a {
+  display: block;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: 0.2s;
+}
+.footer-col a:hover {
+  color: var(--neon-pink);
+  padding-left: 4px;
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 20px 0;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* ============================================
+   АДАПТИВ
+   ============================================ */
+@media (max-width: 960px) {
+  .map-wrap { height: 500px; }
+  .contact-card { margin-top: -120px; max-width: 460px; padding: 32px 26px; }
+  .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+}
+
+@media (max-width: 720px) {
+  .header-inner { height: 72px; gap: 10px; }
+  .logo-img { height: 52px; }
+  .logo-text { font-size: 17px; }
+
+  .burger { display: flex; }
+
+  .nav {
+    position: fixed;
+    top: 72px;
+    left: 0;
+    right: 0;
+    height: calc(100vh - 72px);
+    background: var(--bg);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 36px 24px;
+    gap: 22px;
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+    border-top: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 150;
+  }
+  .nav.open { transform: translateX(0); }
+  .nav-link { font-size: 18px; width: 100%; }
+  .nav .btn { width: 100%; }
+
+  .user-box {
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    padding: 8px 0;
+  }
+  .user-name { font-size: 15px; }
+  .user-logout { padding: 10px 18px; font-size: 12px; }
+
+  .header-actions { gap: 8px; }
+  .cart-btn { width: 42px; height: 42px; }
+  .cart-btn svg { width: 20px; height: 20px; }
+
+  .page-hero { padding: 40px 0 30px; }
+
+  .map-wrap { height: 420px; }
+  .contact-card {
+    margin: -100px 16px 0;
+    max-width: none;
+    padding: 28px 22px;
+  }
+  .contact-card-title { font-size: 17px; margin-bottom: 20px; }
+  .contact-value { font-size: 15px; }
+
+  .legal { padding: 40px 0 20px; }
+}
+
+@media (max-width: 400px) {
+  .logo-text { display: none; }
+  .contact-card { padding: 24px 18px; }
+  .contact-list li { padding: 12px 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== ШАПКА ==================== -->
+<header class="header">
+  <div class="container header-inner">
+
+    <a href="index.html" class="logo">
+      <img src="img/logo.png" alt="K-STREET" class="logo-img">
+      <span class="logo-text">K-STREET</span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="index.html" class="nav-link">Главная</a>
+      <a href="menu.html" class="nav-link">Меню</a>
+      <a href="about.html" class="nav-link">О нас</a>
+      <a href="contacts.html" class="nav-link active">Контакты</a>
+      <a href="login.html" class="btn btn-outline" id="loginBtn">Войти</a>
+    </nav>
+
+    <div class="header-actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Открыть корзину">
+        <svg viewBox="0 0 24 24">
+          <circle cx="9" cy="20" r="1.5"></circle>
+          <circle cx="18" cy="20" r="1.5"></circle>
+          <path d="M2 3h3l2.4 12.6a2 2 0 0 0 2 1.4h8.6a2 2 0 0 0 2-1.6L22 7H6"></path>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+
+      <button class="burger" id="burger" aria-label="Открыть меню">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ==================== ЗАГОЛОВОК ==================== -->
+<section class="page-hero">
+  <div class="container">
+    <p class="page-hero-kr">연락처</p>
+    <h1 class="page-hero-title">Контакты</h1>
+  </div>
+</section>
+
+<!-- ==================== КАРТА ==================== -->
+<section class="map-section">
+  <div class="container">
+    <div class="map-wrap">
+
+      <iframe
+        src="https://yandex.ru/map-widget/v1/?ll=45.149119%2C54.166908&z=17&pt=45.149119,54.166908,pm2rdm"
+        allowfullscreen
+        loading="lazy"
+        title="Карта — K-STREET на ул. Гагарина 99А/2, Саранск">
+      </iframe>
+
+    </div>
+
+    <!-- Карточка контактов -->
+    <div class="contact-card">
+      <h2 class="contact-card-title">Ждём вас по адресу</h2>
+
+      <ul class="contact-list">
+
+        <li>
+          <span class="contact-label">Адрес</span>
+          <span class="contact-value">г. Саранск, ул. Гагарина, 99А/2</span>
+        </li>
+
+        <li>
+          <span class="contact-label">Часы работы</span>
+          <span class="contact-value">Ежедневно с 11:00 до 22:00</span>
+        </li>
+
+        <li>
+          <span class="contact-label">Телефон</span>
+          <span class="contact-value">
+            <a href="tel:+79271973555">+7 (927) 197-35-55</a>
+          </span>
+        </li>
+
+        <li>
+          <span class="contact-label">Почта</span>
+          <span class="contact-value">
+            <a href="mailto:kstreet_saransk@mail.ru">kstreet_saransk@mail.ru</a>
+          </span>
+        </li>
+
+      </ul>
+
+      <a href="https://vk.ru/kstreet_saransk" target="_blank" rel="noopener" class="contact-vk">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M13.16 17.4c-5.42 0-8.51-3.71-8.63-9.9h2.72c.08 4.54 2.1 6.46 3.68 6.85V7.5h2.56v4.05c1.56-.17 3.2-1.95 3.75-4.05h2.56c-.42 2.5-2.19 4.28-3.45 5.03 1.26.61 3.27 2.15 4.04 4.87h-2.82c-.6-1.87-2.09-3.31-4.08-3.51v3.51h-.33z"/>
+        </svg>
+        Группа ВКонтакте
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== РЕКВИЗИТЫ ==================== -->
+<section class="legal">
+  <div class="container">
+
+    <div class="legal-block">
+      <p class="legal-title">Разработка сайта</p>
+      <p class="legal-text">Учебный проект — курсовая работа, 2025</p>
+    </div>
+
+    <div class="legal-block">
+      <p class="legal-title">Реквизиты</p>
+      <p class="legal-text">
+        ООО «K-STREET»<br>
+        ОГРН 1234567890123<br>
+        ИНН 1234567890, КПП 123456789
+      </p>
+    </div>
+
+    <div class="legal-block">
+      <div class="legal-links">
+        <a href="#">Пользовательское соглашение</a>
+        <a href="#">Политика конфиденциальности</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==================== ПОДВАЛ ==================== -->
+<footer class="footer">
+  <div class="container footer-inner">
+
+    <div class="footer-col">
+      <span class="logo-text">K-STREET</span>
+      <p>Ресторан корейской кухни и барбекю.<br>Аутентичные рецепты, свежие продукты.</p>
+    </div>
+
+    <div class="footer-col">
+      <h4>Разделы</h4>
+      <a href="index.html">Главная</a>
+      <a href="menu.html">Меню</a>
+      <a href="about.html">О нас</a>
+      <a href="contacts.html">Контакты</a>
+    </div>
+
+    <div class="footer-col">
+      <h4>Контакты</h4>
+      <p>г. Саранск, ул. Гагарина, 99А/2</p>
+      <p>+7 (927) 197-35-55</p>
+      <p>Ежедневно 11:00 — 22:00</p>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="container">© 2025 K-STREET. Все права защищены.</div>
+  </div>
+</footer>
+
+<!-- ==================== JS ==================== -->
+<script>
+/* ============================================
+   КОНСТАНТЫ
+   ============================================ */
+const CART_KEY = 'kstreet_cart';
+const CURRENT_USER_KEY = 'kstreet_user';
+
+/* ============================================
+   КОРЗИНА
+   ============================================ */
+function getCart() {
+  try {
+    const raw = localStorage.getItem(CART_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function getCartCount(cart) {
+  return cart.reduce(function (sum, item) { return sum + item.qty; }, 0);
+}
+
+function updateCartUI() {
+  const cart = getCart();
+  const count = getCartCount(cart);
+
+  const countEl = document.getElementById('cartCount');
+  if (!countEl) return;
+
+  countEl.textContent = count;
+  if (count > 0) {
+    countEl.classList.add('visible');
+  } else {
+    countEl.classList.remove('visible');
+  }
+}
+
+/* ============================================
+   МОБИЛЬНОЕ МЕНЮ
+   ============================================ */
+const burger = document.getElementById('burger');
+const nav = document.getElementById('nav');
+
+burger.addEventListener('click', function () {
+  nav.classList.toggle('open');
+  burger.classList.toggle('active');
+});
+
+document.querySelectorAll('.nav-link, .nav .btn').forEach(function (link) {
+  link.addEventListener('click', function () {
+    nav.classList.remove('open');
+    burger.classList.remove('active');
+  });
+});
+
+/* ============================================
+   ПОЛЬЗОВАТЕЛЬ В ШАПКЕ
+   ============================================ */
+function renderUserInHeader() {
+  const raw = localStorage.getItem(CURRENT_USER_KEY);
+  if (!raw) return;
+
+  let user;
+  try { user = JSON.parse(raw); } catch (e) { return; }
+  if (!user || !user.name) return;
+
+  const loginBtn = document.getElementById('loginBtn');
+  if (!loginBtn) return;
+
+  const userBox = document.createElement('div');
+  userBox.className = 'user-box';
+  userBox.innerHTML =
+    '<span class="user-name">' + user.name + '</span>' +
+    '<button class="user-logout" type="button">Выйти</button>';
+
+  loginBtn.replaceWith(userBox);
+
+  userBox.querySelector('.user-logout').addEventListener('click', function () {
+    localStorage.removeItem(CURRENT_USER_KEY);
+    window.location.reload();
+  });
+}
+
+/* ============================================
+   ИНИЦИАЛИЗАЦИЯ
+   ============================================ */
+updateCartUI();
+renderUserInHeader();
+</script>
+
+</body>
+</html>
