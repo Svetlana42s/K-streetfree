@@ -483,6 +483,22 @@ ul { list-style: none; }
   box-shadow: 0 0 20px rgba(255, 46, 166, 0.6);
 }
 
+/* Особая кнопка для Комбо */
+.category-chip[data-category="combo"] {
+  border-color: rgba(255, 212, 0, 0.5);
+  color: var(--yellow);
+}
+.category-chip[data-category="combo"]:hover {
+  border-color: var(--yellow);
+  box-shadow: 0 0 16px rgba(255, 212, 0, 0.5);
+}
+.category-chip[data-category="combo"].active {
+  background: var(--yellow);
+  border-color: var(--yellow);
+  color: #1a1a1a;
+  box-shadow: 0 0 22px rgba(255, 212, 0, 0.7);
+}
+
 /* МЕНЮ */
 .menu-section { padding: 40px 0 10px; }
 .menu-section-title {
@@ -520,6 +536,19 @@ ul { list-style: none; }
   border-color: var(--neon-pink);
   box-shadow: 0 0 28px rgba(255, 46, 166, 0.3);
   transform: translateY(-4px);
+}
+
+/* Особая рамка для комбо */
+.product-card[data-category="combo"] {
+  border-color: rgba(255, 212, 0, 0.35);
+  box-shadow: 0 0 20px rgba(255, 212, 0, 0.15);
+}
+.product-card[data-category="combo"]:hover {
+  border-color: var(--yellow);
+  box-shadow: 0 0 32px rgba(255, 212, 0, 0.45);
+}
+.product-card[data-category="combo"] .product-card__badge {
+  display: block;
 }
 
 .product-img-wrap {
@@ -577,6 +606,24 @@ ul { list-style: none; }
   filter: drop-shadow(0 0 6px rgba(255, 46, 166, 0.8));
 }
 
+/* Бейдж "КОМБО" на фото */
+.product-card__badge {
+  display: none;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 3;
+  padding: 5px 12px;
+  border-radius: 50px;
+  background: var(--yellow);
+  color: #1a1a1a;
+  font-family: 'Unbounded', sans-serif;
+  font-weight: 900;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  box-shadow: 0 0 14px rgba(255, 212, 0, 0.7);
+}
+
 .product-body {
   padding: 16px 18px 20px;
   display: flex;
@@ -597,7 +644,7 @@ ul { list-style: none; }
   margin-bottom: 16px;
   flex: 1;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -639,7 +686,7 @@ ul { list-style: none; }
   box-shadow: 0 0 20px rgba(255, 212, 0, 0.7);
 }
 
-/* ЗАГРУЗКА */
+/* Загрузка */
 .loading {
   text-align: center;
   padding: 80px 20px;
@@ -722,9 +769,7 @@ ul { list-style: none; }
   font-size: 13px;
 }
 
-/* ============================================
-   КОРЗИНА (полностью адаптивная)
-   ============================================ */
+/* КОРЗИНА */
 .overlay {
   position: fixed;
   inset: 0;
@@ -756,7 +801,6 @@ ul { list-style: none; }
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6);
 }
 .cart.open { transform: translateX(0); }
-
 .cart-header {
   display: flex;
   align-items: center;
@@ -918,9 +962,7 @@ ul { list-style: none; }
   text-shadow: 0 0 16px rgba(255, 212, 0, 0.5);
 }
 
-/* ============================================
-   ПАНЕЛЬ ИЗБРАННОГО (адаптивная)
-   ============================================ */
+/* ПАНЕЛЬ ИЗБРАННОГО */
 .fav-panel {
   position: fixed;
   top: 0;
@@ -1131,9 +1173,7 @@ ul { list-style: none; }
 }
 .modal-skip:hover { color: var(--neon-pink); }
 
-/* ============================================
-   АДАПТИВ
-   ============================================ */
+/* АДАПТИВ */
 @media (max-width: 960px) {
   .footer-inner { grid-template-columns: 1fr; gap: 32px; }
 }
@@ -1193,36 +1233,46 @@ ul { list-style: none; }
   }
   .product-body { padding: 12px 14px 16px; }
   .product-title { font-size: 13px; }
-  .product-desc { font-size: 11.5px; }
+  .product-desc { font-size: 11.5px; -webkit-line-clamp: 2; }
   .product-price { font-size: 15px; }
   .product-btn { width: 34px; height: 34px; font-size: 18px; }
   .fav-btn { width: 34px; height: 34px; top: 10px; right: 10px; }
   .fav-btn svg { width: 18px; height: 18px; }
+  .product-card__badge { font-size: 9px; padding: 4px 10px; top: 10px; left: 10px; }
 
-  /* Корзина и избранное — на всю ширину */
   .cart, .fav-panel {
-    width: 100%;
-    max-width: 100%;
-    border-left: none;
+    width: 100% !important;
+    max-width: 100% !important;
+    border-left: none !important;
+    left: 0 !important;
+    right: 0 !important;
   }
-  .cart-header {
-    padding: 20px 20px 16px;
-    padding-top: calc(20px + env(safe-area-inset-top, 0px));
+  .cart-header,
+  .fav-panel-header {
+    padding: 18px 20px 14px;
+    padding-top: calc(18px + env(safe-area-inset-top, 0px));
   }
-  .cart-title { font-size: 18px; }
-  .cart-close { width: 40px; height: 40px; font-size: 24px; }
-  .cart-body {
+  .cart-title,
+  .fav-panel-title { font-size: 18px; }
+  .cart-close,
+  .fav-panel-close { width: 40px; height: 40px; font-size: 24px; }
+  .cart-body,
+  .fav-panel-body {
     padding: 12px 16px;
     padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
   }
-  .cart-item {
+  .cart-item,
+  .fav-panel-body .cart-item {
     grid-template-columns: 64px 1fr auto;
     gap: 12px;
     padding: 14px 0;
   }
-  .cart-item-img { width: 64px; height: 64px; }
-  .cart-item-title { font-size: 13px; margin-bottom: 3px; }
-  .cart-item-price { font-size: 12px; }
+  .cart-item-img,
+  .fav-panel-body .cart-item-img { width: 64px; height: 64px; }
+  .cart-item-title,
+  .fav-panel-body .cart-item-title { font-size: 13px; margin-bottom: 3px; }
+  .cart-item-price,
+  .fav-panel-body .cart-item-price { font-size: 12px; }
   .qty-btn { width: 32px; height: 32px; font-size: 17px; }
   .qty-value { font-size: 13px; min-width: 24px; }
   .cart-footer {
@@ -1232,33 +1282,6 @@ ul { list-style: none; }
   .cart-total-label { font-size: 13px; }
   .cart-total-value { font-size: 22px; }
 
-  /* Панель избранного */
-  .fav-panel-header {
-    padding: 20px 20px 16px;
-    padding-top: calc(20px + env(safe-area-inset-top, 0px));
-  }
-  .fav-panel-title { font-size: 18px; }
-  .fav-panel-close { width: 40px; height: 40px; font-size: 24px; }
-  .fav-panel-body {
-    padding: 12px 16px;
-    padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
-  }
-  .fav-panel-body .cart-item {
-    grid-template-columns: 64px 1fr auto;
-    gap: 12px;
-    padding: 14px 0;
-  }
-  .fav-panel-body .cart-item-img { width: 64px; height: 64px; }
-  .fav-panel-body .cart-item-title { font-size: 13px; margin-bottom: 3px; }
-  .fav-panel-body .cart-item-price { font-size: 12px; }
-  .fav-panel-body [data-fav-add],
-  .fav-panel-body .qty-btn {
-    width: 36px !important;
-    height: 36px !important;
-    font-size: 18px !important;
-  }
-
-  /* Кнопка вверх */
   .scroll-top {
     bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     right: calc(18px + env(safe-area-inset-right, 0px));
@@ -1267,11 +1290,7 @@ ul { list-style: none; }
   }
   .scroll-top svg { width: 20px; height: 20px; }
 
-  /* Модалка */
-  .modal {
-    padding: 30px 22px;
-    max-width: 100%;
-  }
+  .modal { padding: 30px 22px; max-width: 100%; }
   .modal-title { font-size: 18px; }
 }
 
@@ -1352,6 +1371,7 @@ ul { list-style: none; }
 <div class="categories-nav">
   <div class="categories-scroll" id="categoriesScroll">
     <button class="category-chip active" data-category="all">Всё меню</button>
+    <button class="category-chip" data-category="combo">Комбо-обеды</button>
     <button class="category-chip" data-category="summer">Летний вайб</button>
     <button class="category-chip" data-category="ramen">Рамены</button>
     <button class="category-chip" data-category="bbq">Корейский BBQ</button>
@@ -1466,6 +1486,7 @@ const CURRENT_USER_KEY = 'kstreet_user';
 const FAV_KEY = 'kstreet_favorites';
 
 const CATEGORY_NAMES = {
+  combo:    'Комбо-обеды',
   summer:   'Летний вайб',
   ramen:    'Рамены',
   bbq:      'Корейский BBQ',
@@ -1486,6 +1507,7 @@ const CATEGORY_NAMES = {
 };
 
 const CATEGORY_ORDER = [
+  'combo',
   'summer', 'ramen', 'bbq', 'burrito', 'corndog', 'rolls', 'bibimbap',
   'tokpokki', 'dessert', 'fried', 'banchan', 'sauce', 'hot',
   'bubble', 'slush', 'coffee', 'lemonade'
@@ -1495,7 +1517,6 @@ let allDishes = [];
 let currentCategory = 'all';
 let searchQuery = '';
 
-/* EMAILJS */
 emailjs.init({ publicKey: '7PhgzxfHBh7PVsaNT' });
 
 /* КОРЗИНА */
@@ -1778,10 +1799,12 @@ scrollTopBtn.addEventListener('click', function () {
 function renderDishCard(dish) {
   const img = dish.img_url || 'img/placeholder.jpg';
   const fav = isFavorite(dish.id);
+  const isCombo = dish.category === 'combo';
   return '' +
-    '<article class="product-card">' +
+    '<article class="product-card"' + (isCombo ? ' data-category="combo"' : '') + '>' +
     '  <div class="product-img-wrap">' +
     '    <img src="' + img + '" alt="' + dish.title + '" class="product-img" onerror="this.src=\'img/placeholder.jpg\'">' +
+    '    <span class="product-card__badge">КОМБО</span>' +
     '    <button class="fav-btn' + (fav ? ' active' : '') + '" data-fav-id="' + dish.id + '" aria-label="В избранное">' +
     '      <svg viewBox="0 0 24 24">' +
     '        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>' +
